@@ -3,6 +3,8 @@ const cors = require('cors');
 const http = require('http');
 const connectDB = require('./db');
 const cloudinary = require("cloudinary").v2;
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 require("dotenv").config();
 
 // Cloudinary configuration
@@ -21,15 +23,25 @@ const botRoutes = require("./router/bot");
 const donationRoutes = require('./router/donation');
 const notificationRoutes = require("./router/notification");
 const incentiveRoutes = require("./router/incentive");
-const errorHandler = require('./middleware/errorHandler'); // <-- Note: use default import here
+const errorHandler = require('./middleware/errorHandler');
+
+// Rate limiter for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
 
 // Middleware
+app.use(helmet()); // Add helmet for security headers
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ credentials: true }));
 
 // Routes
-app.use(authRouter);
+app.use('/', authLimiter, authRouter); // Apply rate limiter only to auth routes
 app.use("/notifications", notificationRoutes);
 app.use('/', emergencyRouter);
 app.use("/users", userRoutes);
