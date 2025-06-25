@@ -14,10 +14,10 @@ router.get("/active", emergencyController.getActiveEmergencies);
 router.get("/my-reports", authMiddleware, emergencyController.getUserReportedEmergencies);
 router.get("/dashboardstats", emergencyController.getDashboardStats);
 router.get("/allemergencies", emergencyController.getAllEmergencies);
+router.get("/volunteer/history", authMiddleware, emergencyController.getVolunteerHistory); 
 router.post("/:emergencyId/volunteer", authMiddleware, emergencyController.volunteerForEmergency);
 router.put("/:emergencyId/complete", authMiddleware, emergencyController.markEmergencyCompleted);
 router.put("/:emergencyId/approve", authMiddleware, emergencyController.approveEmergencyCompletion);
 router.get("/:emergencyId", emergencyController.getEmergencyDetails);
-router.get("/volunteer/history", authMiddleware, emergencyController.getVolunteerHistory); 
 
 module.exports = router;
