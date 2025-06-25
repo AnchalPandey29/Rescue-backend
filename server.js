@@ -40,6 +40,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ credentials: true }));
 
+// Health Check
+app.get('/health-status', (req, res) => {
+  res.status(200).json({ status: 'OK', uptime: process.uptime() });
+});
+
 // Routes
 app.use('/', authLimiter, authRouter); // Apply rate limiter only to auth routes
 app.use("/notifications", notificationRoutes);
@@ -49,10 +54,7 @@ app.use("/chatbot", botRoutes);
 app.use('/donation', donationRoutes);
 app.use("/coins", incentiveRoutes);
 
-// Health Check
-app.get('/health-status', (req, res) => {
-  res.status(200).json({ status: 'OK', uptime: process.uptime() });
-});
+
 
 app.use(errorHandler);
 
