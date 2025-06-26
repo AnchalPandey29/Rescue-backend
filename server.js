@@ -15,6 +15,7 @@ cloudinary.config({
 });
 
 const app = express();
+app.set('trust proxy',1);
 
 const authRouter = require('./router/auth');
 const emergencyRouter = require('./router/emergency');
