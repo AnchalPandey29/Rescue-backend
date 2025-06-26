@@ -9,7 +9,6 @@ const upload = multer({ storage });
 
 router.post("/emergency", upload.array("media", 5),emergencyController.createReport);
 router.get("/incidents", emergencyController.getReport);
-
 router.get("/active", emergencyController.getActiveEmergencies);
 router.get("/my-reports", authMiddleware, emergencyController.getUserReportedEmergencies);
 router.get("/dashboardstats", emergencyController.getDashboardStats);

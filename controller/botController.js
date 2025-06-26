@@ -43,15 +43,7 @@ const processMessage = async (req, res) => {
       });
     }
 
-    console.log('Processing request with:', {
-      baseURL,
-      model: process.env.AIMLAPI_MODEL,
-      messageLength: message.length,
-      historyLength: conversationHistory.length,
-      userIp,
-      currentUsage,
-    });
-
+    
     // Map conversation history to AIMLAPI format
     const apiHistory = conversationHistory
       .filter(msg => msg && typeof msg === 'object' && msg.role && msg.content && msg.role !== 'bot')

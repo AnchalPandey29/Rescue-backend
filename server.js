@@ -38,7 +38,13 @@ const authLimiter = rateLimit({
 app.use(helmet()); // Add helmet for security headers
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ credentials: true }));
+app.use(cors({
+  origin: process.env.FRONTEND, // Still absolutely critical to specify your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], // All methods your API uses
+  allowedHeaders: ['Content-Type', 'Authorization'], // Essential if sending JWTs in Authorization header
+  // maxAge: 86400, // Optional: cache preflight requests
+}));
+
 
 // Health Check
 app.get('/health-status', (req, res) => {
@@ -48,7 +54,7 @@ app.get('/health-status', (req, res) => {
 // Routes
 app.use('/', authLimiter, authRouter); // Apply rate limiter only to auth routes
 app.use("/notifications", notificationRoutes);
-app.use('/', emergencyRouter);
+app.use('/api', emergencyRouter);
 app.use("/users", userRoutes);
 app.use("/chatbot", botRoutes);
 app.use('/donation', donationRoutes);
